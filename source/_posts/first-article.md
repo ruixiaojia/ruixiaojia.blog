@@ -5,4 +5,6 @@ tags:
 ---
 #### First Article
 ***
-##### This is my first article 
+##### This is my first article
+
+##### add travis CI oh yeah!

@@ -14,18 +14,14 @@ script:
 after_script:
   - cd ./public
   - git init
-  - git config user.name "ruixiaojia"
-  - git config user.email "ruixiaojia315@163.com"
+  - git config user.name "${U_NAME}"
+  - git config user.email "${U_EMAIL}"
   - git add .
   - git commit -m "Update docs"
-  - git push --force --quiet "https://${GH_TOKEN}@${GH_J}" master:master
+  - git push --force --quiet "https://${GH_TOKEN}@${GH_LOCAL}" master:master
 
 # E: Build LifeCycle
 
 branches:
   only:
     - hexo
-
-env:
- global:
-   - GH_J: github.com/ruixiaojia/ruixiaojia.github.io.git --{仓库地址}

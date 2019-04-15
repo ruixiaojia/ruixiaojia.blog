@@ -91,7 +91,7 @@ menu:
   home: / || home
   # about: /about/ || user
   tags: /tags/ || tags
-  categories: /categ ories/ || th
+  categories: /categories/ || th
   archives: /archives/ || archive
   # schedule: /schedule/ || calendar
   # sitemap: /sitemap.xml || sitemap

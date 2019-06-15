@@ -14,10 +14,10 @@ categories: HTTP
 - URL (Uniform Resource Locator，统一资源定位符
 - URN（Uniform Resource Name，统一资源名称）
 
-![uri](https://ruixiaojia-blog.oss-cn-hangzhou.aliyuncs.com/blog/http/uri.png)
+![uri](https://ruixiaojia-blog.oss-cn-hangzhou.aliyuncs.com/blog/http/uri.png?x-oss-process=style/compression)
 
 ### URL
-![url](https://ruixiaojia-blog.oss-cn-hangzhou.aliyuncs.com/blog/http/url.png)
+![url](https://ruixiaojia-blog.oss-cn-hangzhou.aliyuncs.com/blog/http/url.png?x-oss-process=style/compression)
 
 - protocol 协议部分 : 代表该网页使用的是HTTP协议，"//"为分隔符
 - userinfo 用户信息 : 用于填写一些用户相关的信息，比如可能会填写"user:password"(不建议用于填写用户名及密码)
@@ -40,7 +40,7 @@ categories: HTTP
 | 物理层  | 信道（单工、半双工、全双工） | 在计算机的传输媒体上传输比特流，确定与传输媒体的接口特性 |
 | 物理介质 | 双绞线、光纤、同轴电缆 | 光信号或电信号 |
 
-![tcp/ip](https://ruixiaojia-blog.oss-cn-hangzhou.aliyuncs.com/blog/http/tcp%3Aip.png)
+![tcp/ip](https://ruixiaojia-blog.oss-cn-hangzhou.aliyuncs.com/blog/http/tcp%3Aip.png?x-oss-process=style/compression)
 
 **客户端在发送数据时，每经过一层都会打上一个该层所属的首部信息，反之，服务端在接收数据时，每经过一层会取消对等层的首部信息。**
 
@@ -245,10 +245,10 @@ HTTP协议是一个很单纯的协议，它只会傻傻的去请求并、响应�
 - 不验证通信对方身份，身份遭伪装，请求和响应的客户端或服务器不是真实的，无法阻止海量请求（DDOS）。
 
 HTTP明文通信
-![HTTP](https://ruixiaojia-blog.oss-cn-hangzhou.aliyuncs.com/blog/http/http.png)
+![HTTP](https://ruixiaojia-blog.oss-cn-hangzhou.aliyuncs.com/blog/http/http.png?x-oss-process=style/compression)
 
 TLS加密通信
-![TLS](https://ruixiaojia-blog.oss-cn-hangzhou.aliyuncs.com/blog/http/TLS.png)
+![TLS](https://ruixiaojia-blog.oss-cn-hangzhou.aliyuncs.com/blog/http/TLS.png?x-oss-process=style/compression)
 
 ** 通常HTTP是直接和TCP通信的，SSL是独立的协议，处于HTTP之下TCP之上，由SSL来加密、认证传输内容。实际上HTTPS就是添加了认证、加密的HTTP，也可以理解为身披SSL的HTTP。**
 

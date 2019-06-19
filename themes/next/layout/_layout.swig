@@ -25,6 +25,12 @@
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="{{ page.lang || page.language || config.language }}">
 
+<script>
+  !(function(c,b,d,a){c[a]||(c[a]={});c[a].config={pid:"edoafng5gp@95fdd72b343c07d",appType:"web",imgUrl:"https://arms-retcode.aliyuncs.com/r.png?",enableSPA:true,useFmp:true,sendResource:true};
+  with(b)with(body)with(insertBefore(createElement("script"),firstChild))setAttribute("crossorigin","",src=d)
+  })(window,document,"https://retcode.alicdn.com/retcode/bl.js","__bl");
+</script>
+
   {% set container_class = 'container' %}
   {% if theme.sidebar.position %}
     {% set container_class = container_class + ' sidebar-position-' + theme.sidebar.position %}

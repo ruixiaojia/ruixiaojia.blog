@@ -2,7 +2,7 @@
 title: HTTP 超文本运输协议（HyperText Transfer Protocol）
 date: 2019-06-12 22:47:39
 tags: HTTP
-categories: HTTP
+categories: TCP/IP
 ---
 
 **用于客户端和服务端请求和响应超文本信息，请求访问资源的一端称之为客户端，响应返回资源的一端称之为服务端且都是通信过程中的应用进程。属于TCP/IP协议族的子集，处于TCP/IP五层网络模型的应用层。**

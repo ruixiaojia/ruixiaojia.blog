@@ -2,7 +2,7 @@
 title: 关于抓包（packet capture）
 date: 2019-05-15 23:13:17
 tags: Packet Capture
-categories: HTTP
+categories: TCP/IP
 ---
 
 看标题也知道咯，此篇分享呢主要是向大家分享一些我在日常工作中使用到的一些工具以及如何去使用它帮助我们解决开发中截获、编辑、分析网络数据包的问题。

@@ -33,15 +33,13 @@ $ git config user.email
 ```
 $ ssh-keygen -t rsa -f ~/.ssh/id_rsa_github -C "your_email@gmail.com"
 ```
-```
-$ ssh-keygen -t rsa -C "your_email@gmail.com"
-```
-执行完命令后会在～/.ssh/文件夹下生成id_rsa_github(密钥)、id_rsa_github.pub(公钥)和id_rsa(密钥)、id_rsa.pub(公钥)的文件，需要将.pub后缀的文件内容拷贝到你的github/gitlab内，此过程不再赘述。
+执行完命令后会在～/.ssh/文件夹下生成id_rsa_github(私钥)、id_rsa_github.pub(公钥)和id_rsa(私钥)、id_rsa.pub(公钥)的文件，需要将.pub后缀的文件内容拷贝到你的github/gitlab内。
+github  --  setting  --  SSH Keys  --  New SSH key  --  Add SSH key。
 
 ##### 执行完以上命令后你只是配置了gitlab和github的用户名、邮箱和公钥，但还是不能进行正常的开发。我们需要让git在操作远程仓库的时候知道它现在是在github还是在gitlab上(通过域名), 所以我们需要通过一个config文件来区分。
 
 #### 第三步     配置config文件
-创建并修改config文件
+创建并修改config文件（不会使用vim可以手动修改）
 ```
 $ touch config
 

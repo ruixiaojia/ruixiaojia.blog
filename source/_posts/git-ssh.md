@@ -60,7 +60,7 @@ HostName gitlab.xxx.com
 IdentityFile ~/.ssh/id_rsa
 ```
 - Host: 将要链接的服务器地址。
-- User: 默认为git，可不填。
+- User: 本次链接使用的用户名。
 - HostName: 真正链接的服务器地址。
 - IdentityFile: 本次链接指定的密钥文件。
 - PreferredAuthentications: 指定优先使用哪种方式验证，支持密码和秘钥验证方式。

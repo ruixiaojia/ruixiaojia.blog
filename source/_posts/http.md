@@ -235,31 +235,6 @@ Location 与 Content-Location是不同的，前者（Location ）指定的是一
 #### Last-Modified
 资源的修改日期。<week>, <day> <month> <year> <hour>:<minute>:<second> GMT
 
-## HTTPS （HTTP over SSL）
-** HTTP协议中没有加密机制，但是可以通过和SSL(安全套接层)、TLS(安全传输层协议，包括TLS记录协议和TLS握手协议，实际上TLS就是标准化的SSL3.0)组合使用达到加密HTTP的效果。**
-
-互联网不是某个国家、组织、个人的私有物，在这种中间极有可能遭到恶意窥视。
-HTTP协议是一个很单纯的协议，它只会傻傻的去请求并、响应，因此就有人利用它的傻白甜做一些不好的事情。
-由于通信内容是未加密的，即使在通信的过程中使用了POST请求，但数据包在网络中是流动的，其内容很容易被一些抓包工具嗅探到，就会出现以下几种问题。
-
-- 明文通信，内容可能被窃听（信息泄露）。
-- 无法确保报文完整性，内容可能遭篡改（中间人攻击 MITM）。
-- 不验证通信对方身份，身份遭伪装，请求和响应的客户端或服务器不是真实的，无法阻止海量请求（DDOS）。
-
-> [HTTPS的DDoS攻击防护思路](http://blog.nsfocus.net/https-ddos-attack-defense-ideas/)
-
-HTTP明文通信
-![HTTP](https://ruixiaojia-blog.oss-cn-hangzhou.aliyuncs.com/blog/http/http.png?x-oss-process=style/compression)
-
-TLS加密通信
-![TLS](https://ruixiaojia-blog.oss-cn-hangzhou.aliyuncs.com/blog/http/TLS.png?x-oss-process=style/compression)
-
-** 通常HTTP是直接和TCP通信的，SSL是独立的协议，处于HTTP之下TCP之上，由SSL来加密、认证传输内容。实际上HTTPS就是添加了身份验证、报文加密、报文完整性校验的HTTP，也可以理解为身披SSL的HTTP。**
-
-** HTTPS采用对称加密和非对称加密，两种加密方式并用的混合加密机制，在交换秘钥环节使用对称加密，报文交换阶段使用非对称加密方式，交换秘钥环节使用对称加密很容易遭到中间人攻击（MITM）至秘钥泄露或者被替换，这时候就要用到证书，证书会对该公钥进行数字签名，并将这个已签名的公钥和证书绑定在一起，以保证非对称加密过程的安全。**
-
-** 加密解密的过程会消耗CPU及内存资源，SSL通信也会占用部分网络资源。**
-
 ## HTTP的特点
 
 - 一次链接只能发送一个请求

@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"bounceUpIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="在了解SSH安全外壳协议之前，我们需要大致了解一下对称加密和非对称加密以及数字签名，推荐一篇很好的文章来理解什么是数字签名，文章中鲍勃扮演客户端，苏珊扮演服务端。 对称加密是一种采用单钥密码系统加密的方法，即同一个密钥即可用做加密也可用作解密，也称之为单密钥加密。 常用的算法:    MD5（消息摘要算法）、SHA（安全散列算法）优点:    加密解密的速度比较快，适合长时间使用的数据。缺点 :">
+<meta name="keywords" content="SSH">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于SSH（Secure Shell）安全外壳协议">
+<meta property="og:url" content="http://yoursite.com/2019/04/26/secure-shell/index.html">
+<meta property="og:site_name" content="Hey">
+<meta property="og:description" content="在了解SSH安全外壳协议之前，我们需要大致了解一下对称加密和非对称加密以及数字签名，推荐一篇很好的文章来理解什么是数字签名，文章中鲍勃扮演客户端，苏珊扮演服务端。 对称加密是一种采用单钥密码系统加密的方法，即同一个密钥即可用做加密也可用作解密，也称之为单密钥加密。 常用的算法:    MD5（消息摘要算法）、SHA（安全散列算法）优点:    加密解密的速度比较快，适合长时间使用的数据。缺点 :">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-06-06T09:36:31.773Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于SSH（Secure Shell）安全外壳协议">
+<meta name="twitter:description" content="在了解SSH安全外壳协议之前，我们需要大致了解一下对称加密和非对称加密以及数字签名，推荐一篇很好的文章来理解什么是数字签名，文章中鲍勃扮演客户端，苏珊扮演服务端。 对称加密是一种采用单钥密码系统加密的方法，即同一个密钥即可用做加密也可用作解密，也称之为单密钥加密。 常用的算法:    MD5（消息摘要算法）、SHA（安全散列算法）优点:    加密解密的速度比较快，适合长时间使用的数据。缺点 :">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2019/04/26/secure-shell/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>关于SSH（Secure Shell）安全外壳协议 | Hey</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+<script>
+  !(function(c,b,d,a){c[a]||(c[a]={});c[a].config={pid:"edoafng5gp@95fdd72b343c07d",appType:"web",imgUrl:"https://arms-retcode.aliyuncs.com/r.png?",enableSPA:true,useFmp:true,sendResource:true};
+  with(b)with(body)with(insertBefore(createElement("script"),firstChild))setAttribute("crossorigin","",src=d)
+  })(window,document,"https://retcode.alicdn.com/retcode/bl.js","__bl");
+</script>
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hey</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">If not now, when? If not me, who?</h1>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/26/secure-shell/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mr.J">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/logo.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hey">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">关于SSH（Secure Shell）安全外壳协议
+
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-04-26 11:22:16" itemprop="dateCreated datePublished" datetime="2019-04-26T11:22:16+00:00">2019-04-26</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2020-06-06 09:36:31" itemprop="dateModified" datetime="2020-06-06T09:36:31+00:00">2020-06-06</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/SSH/" itemprop="url" rel="index"><span itemprop="name">SSH</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+            <span id="/2019/04/26/secure-shell/" class="leancloud_visitors" data-flag-title="关于SSH（Secure Shell）安全外壳协议">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Views: </span>
+              
+                <span class="leancloud-visitors-count"></span>
+            </span>
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             Views:  
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在了解SSH安全外壳协议之前，我们需要大致了解一下对称加密和非对称加密以及数字签名，推荐一篇很好的文章来理解<a href="http://www.ruanyifeng.com/blog/2011/08/what_is_a_digital_signature.html" target="_blank" rel="noopener">什么是数字签名</a>，文章中鲍勃扮演客户端，苏珊扮演服务端。</p>
+<h4 id="对称加密"><a href="#对称加密" class="headerlink" title="对称加密"></a>对称加密</h4><p>是一种采用单钥密码系统加密的方法，即同一个密钥即可用做加密也可用作解密，也称之为单密钥加密。</p>
+<p><strong>常用的算法</strong>:    MD5（消息摘要算法）、SHA（安全散列算法）<br><strong>优点</strong>:    加密解密的速度比较快，适合长时间使用的数据。<br><strong>缺点</strong> :    加密解密都是使用同一密钥，机密性完全依赖于密钥，密钥的传输和保存存在安全问题，容易泄露、破解，当通信对象增多时密钥的管理也较麻烦。</p>
+<h4 id="非对称加密"><a href="#非对称加密" class="headerlink" title="非对称加密"></a>非对称加密</h4><p>需要有两个密钥来进行加密和解密，公钥（public key）、私钥（privare key），如果用公钥对数据进行加密，只有使用对应的私钥才能解密。如果用私钥对数据进行加密，则只能用公钥才能将数据解密。加密和解密需要使用不同的密钥。</p>
+<p><strong>常用的算法</strong>:    RSA、DSA<br><strong>优点</strong>:    与对称加密相比，其安全性更好。<br><strong>缺点</strong> :    加密和解密花费时间长、速度慢，只适合对少量数据进行加密。</p>
+<hr>
+<h3 id="SSH（Secure-Shell）安全外壳协议"><a href="#SSH（Secure-Shell）安全外壳协议" class="headerlink" title="SSH（Secure Shell）安全外壳协议"></a>SSH（Secure Shell）安全外壳协议</h3><h4 id="什么是SSH-？"><a href="#什么是SSH-？" class="headerlink" title="什么是SSH ？"></a>什么是SSH ？</h4><ul>
+<li>充分利用了对称加密、非对称加密来实现计算机之间的加密登陆和安全数据传输。</li>
+<li>SSH是建立在应用层基础上的安全协议，专为远程登陆会话和其他网络服务提供安全性的协议。</li>
+</ul>
+<h4 id="主要特征"><a href="#主要特征" class="headerlink" title="主要特征"></a>主要特征</h4><ul>
+<li>加密：避免数据泄露</li>
+<li>通信的完整性：保证数据在传输过程中不会丢失、被篡改。</li>
+<li>认证：识别数据发送者、接受者身份，避免中间人攻击和重定向请求攻击。</li>
+</ul>
+<h4 id="主要阶段"><a href="#主要阶段" class="headerlink" title="主要阶段"></a>主要阶段</h4><ul>
+<li><h5 id="协议协商阶段"><a href="#协议协商阶段" class="headerlink" title="协议协商阶段"></a>协议协商阶段</h5><ol>
+<li>服务端打开服务端口（默认22），等待客户端连接。</li>
+<li>客户端发起TCP连接请求，并建立TCP连接，之后向客户端发送SSH协议版本信息。</li>
+<li>客户端根据收到的版本信息决定将要使用的SSH版本，并向服务端发送。</li>
+<li>服务端检查是否支持客户端决定使用的SSH版本。若支持，则双方完成协议协商，与客户端建立明文的通信通道进入服务端认证阶段，若版本不兼容，则双方都可断开连接。</li>
+</ol>
+</li>
+<li><h5 id="服务端认证阶段"><a href="#服务端认证阶段" class="headerlink" title="服务端认证阶段"></a>服务端认证阶段</h5><ol>
+<li>服务端向客户端发送以下内容：<ul>
+<li>host key：用于认证服务端身份。</li>
+<li>server key： 用于帮助建立安全的数据传输通道。</li>
+<li>8字节的随机数：客户端在下次响应中包含随机数，来防止IP欺诈。</li>
+<li>服务端支持的压缩方式、加密算法、认证方式。</li>
+</ul>
+</li>
+<li>客户端在收到服务端发送的host key后会在本地的known host库（～/.ssh/known_host）文件中查找是否包含当前服务端发送的host key，如果有则下一步，如果没有则可以选择是否信任该服务端，或终止当前链接。</li>
+<li>客户端需要向服务端发送session key（不可泄露）用于建立安全通信，出于性能考虑，SSH采用对称加密的方式，由当前的通信通道还是采用明文方式，需要用host key和server key（都为非对称加密）来对session key进行两次加密。</li>
+<li>服务端收到session key后对其解密，完成安全通道的建立。在正式使用安全通道前客户端要求服务端再次使用session key加密的确认信息，以确认服务端身份。</li>
+</ol>
+</li>
+<li><h5 id="客户端认证阶段"><a href="#客户端认证阶段" class="headerlink" title="客户端认证阶段"></a>客户端认证阶段</h5>  安全通道已经成功建立，之后所有通信内容都是通过session key加密后进行传输。<ol>
+<li><strong>password</strong>：即客户端提供用户名和密码，服务端通过用户名和密码对客户端身份进行认证。</li>
+<li><strong>public key</strong>：基于非对称加密，客户端需要将生成的公钥储存在服务端，服务端用公钥将数据进行加密，客户端若能用私钥对其进行解密则可证明身份。</li>
+</ol>
+</li>
+<li><h5 id="数据传输阶段"><a href="#数据传输阶段" class="headerlink" title="数据传输阶段"></a>数据传输阶段</h5>  该阶段通过session key提供的加密算法，来保证通信过程中的数据安全。</li>
+</ul>
+
+      
+    </div>
+
+    
+      
+
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/SSH/" rel="tag"># SSH</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/04/15/git-ssh/" rel="next" title="同时配置 gitlab & github">
+                <i class="fa fa-chevron-left"></i> 同时配置 gitlab & github
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/05/15/packet-capture/" rel="prev" title="关于抓包（packet capture）">
+                关于抓包（packet capture） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/logo.jpg" alt="Mr.J">
+            
+              <p class="site-author-name" itemprop="name">Mr.J</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">10</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/ruixiaojia" title="GitHub &rarr; https://github.com/ruixiaojia" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#对称加密"><span class="nav-number">1.</span> <span class="nav-text">对称加密</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#非对称加密"><span class="nav-number">2.</span> <span class="nav-text">非对称加密</span></a></li></ol><li class="nav-item nav-level-3"><a class="nav-link" href="#SSH（Secure-Shell）安全外壳协议"><span class="nav-number"></span> <span class="nav-text">SSH（Secure Shell）安全外壳协议</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#什么是SSH-？"><span class="nav-number">1.</span> <span class="nav-text">什么是SSH ？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#主要特征"><span class="nav-number">2.</span> <span class="nav-text">主要特征</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#主要阶段"><span class="nav-number">3.</span> <span class="nav-text">主要阶段</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#协议协商阶段"><span class="nav-number">3.1.</span> <span class="nav-text">协议协商阶段</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#服务端认证阶段"><span class="nav-number">3.2.</span> <span class="nav-text">服务端认证阶段</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#客户端认证阶段"><span class="nav-number">3.3.</span> <span class="nav-text">客户端认证阶段</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#数据传输阶段"><span class="nav-number">3.4.</span> <span class="nav-text">数据传输阶段</span></a></li></ol></li></ol></li></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr.J</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="Total Visitors">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+  
+
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="Total Views">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+  
+  <script>
+    
+    function addCount(Counter) {
+      var $visitors = $('.leancloud_visitors');
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url }) })
+        .done(function({ results }) {
+          if (results.length > 0) {
+            var counter = results[0];
+            
+            Counter('put', '/classes/Counter/' + counter.objectId, JSON.stringify({ time: { '__op': 'Increment', 'amount': 1 } }))
+            
+              .done(function() {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.time + 1);
+              })
+            
+              .fail(function ({ responseJSON }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+              })
+          } else {
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text('Counter not initialized! More info at console err msg.');
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .fail(function ({ responseJSON }) {
+          console.log('LeanCloud Counter Error: ' + responseJSON.code + ' ' + responseJSON.error);
+        });
+    }
+    
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + '')
+        .done(function({ api_server }) {
+          var Counter = function(method, url, data) {
+            return $.ajax({
+              method: method,
+              url: 'https://' + api_server + '/1.1' + url,
+              headers: {
+                'X-LC-Id': '',
+                'X-LC-Key': '',
+                'Content-Type': 'application/json',
+              },
+              data: data
+            });
+          };
+          
+            addCount(Counter);
+          
+        });
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
